@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Livro</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="header">
+
+        <div class="logo">
+            Minha Biblioteca
+        </div>
+
+        <nav class="menu">
+            <a href="index.html">Livros</a>
+        </nav>
+
+    </header>
+
+    <div class="container">
+
+        <div class="card" id="livroCard"></div>
+
+    </div>
+
+    <script>
+
+        const API = "http://localhost:8080/livros";
+
+        const params = new URLSearchParams(window.location.search);
+
+        const id = params.get("id");
+
+        async function carregarLivro(){
+
+            const resposta = await fetch(`${API}/${id}`);
+
+            const livro = await resposta.json();
+
+            document.getElementById("livroCard").innerHTML = `
+
+                <h1>${livro.nomeLivro}</h1>
+
+                <p><strong>Páginas:</strong> ${livro.paginas}</p>
+
+                <p><strong>Avaliação:</strong> ${livro.avaliacao}/10</p>
+
+                <p>${livro.avaliacaoEscrita}</p>
+            `;
+        }
+
+        carregarLivro();
+
+    </script>
+
+</body>
+</html>

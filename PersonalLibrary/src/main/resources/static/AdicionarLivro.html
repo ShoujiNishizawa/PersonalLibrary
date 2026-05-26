@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Adicionar Livro</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="header">
+
+        <div class="logo">
+            Minha Biblioteca
+        </div>
+
+        <nav class="menu">
+            <a href="index.html">Livros</a>
+
+            <a href="AdicionarLivro.html">
+                Adicionar Livro
+            </a>
+        </nav>
+
+    </header>
+
+    <div class="container">
+
+        <div class="form-card">
+
+            <h1>Adicionar Livro</h1>
+
+            <form id="formLivro">
+
+                <input
+                    type="text"
+                    id="nomeLivro"
+                    placeholder="Nome do livro"
+                    required
+                >
+
+                <input
+                    type="number"
+                    id="paginas"
+                    placeholder="Quantidade de páginas"
+                    required
+                >
+
+                <input
+                    type="number"
+                    id="avaliacao"
+                    placeholder="Avaliação (0-10)"
+                    min="0"
+                    max="10"
+                    required
+                >
+
+                <textarea
+                    id="avaliacaoEscrita"
+                    placeholder="Comentário sobre o livro"
+                    rows="5">
+                </textarea>
+
+                <button type="submit">
+                    Salvar Livro
+                </button>
+
+            </form>
+
+            <p id="mensagem"></p>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const API = "http://localhost:8080/livros";
+
+        document
+            .getElementById("formLivro")
+            .addEventListener("submit", salvarLivro);
+
+        async function salvarLivro(event){
+
+            event.preventDefault();
+
+            const livro = {
+
+                nomeLivro:
+                    document.getElementById("nomeLivro").value,
+
+                paginas: parseInt(
+                    document.getElementById("paginas").value
+                ),
+
+                avaliacao: parseInt(
+                    document.getElementById("avaliacao").value
+                ),
+
+                avaliacaoEscrita:
+                    document.getElementById("avaliacaoEscrita").value
+            };
+
+            try{
+
+                const resposta = await fetch(API, {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(livro)
+                });
+
+                if(resposta.ok){
+
+                    document.getElementById("mensagem")
+                        .innerText = "Livro salvo com sucesso!";
+
+                    document.getElementById("formLivro")
+                        .reset();
+                    window.location.href = "index.html";
+                }
+                else{
+
+                    document.getElementById("mensagem")
+                        .innerText = "Erro ao salvar livro.";
+                }
+
+            }catch(error){
+
+                document.getElementById("mensagem")
+                    .innerText = "Erro de conexão com a API.";
+            }
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Editar Livro</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="form-card">
+
+            <h1>Editar Livro</h1>
+
+            <form id="formLivro">
+
+                <input type="text" id="nomeLivro">
+
+                <input type="number" id="paginas">
+
+                <input type="number" id="avaliacao">
+
+                <textarea id="avaliacaoEscrita"></textarea>
+
+                <button type="submit">
+                    Salvar Alterações
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const API = "http://localhost:8080/livros";
+
+        const params = new URLSearchParams(window.location.search);
+
+        const id = params.get("id");
+
+        async function carregarLivro(){
+
+            const resposta = await fetch(`${API}/${id}`);
+
+            const livro = await resposta.json();
+
+            document.getElementById("nomeLivro").value =
+                livro.nomeLivro;
+
+            document.getElementById("paginas").value =
+                livro.paginas;
+
+            document.getElementById("avaliacao").value =
+                livro.avaliacao;
+
+            document.getElementById("avaliacaoEscrita").value =
+                livro.avaliacaoEscrita;
+        }
+
+        document
+            .getElementById("formLivro")
+            .addEventListener("submit", editarLivro);
+
+        async function editarLivro(event){
+
+            event.preventDefault();
+
+            const livro = {
+
+                nomeLivro:
+                    document.getElementById("nomeLivro").value,
+
+                paginas: parseInt(
+                    document.getElementById("paginas").value
+                ),
+
+                avaliacao: parseInt(
+                    document.getElementById("avaliacao").value
+                ),
+
+                avaliacaoEscrita:
+                    document.getElementById("avaliacaoEscrita").value
+            };
+
+            await fetch(`${API}/${id}`, {
+
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(livro)
+            });
+
+            window.location.href = "index.html";
+        }
+
+        carregarLivro();
+
+    </script>
+
+</body>
+</html>
